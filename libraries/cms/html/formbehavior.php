@@ -31,14 +31,24 @@ abstract class JHtmlFormbehavior
 	 *
 	 * @param   string  $selector  Class for Chosen elements.
 	 * @param   mixed   $debug     Is debugging mode on? [optional]
+	 * @param	bool	$force     Load even if it disabled by template
 	 *
 	 * @return  void
 	 *
 	 * @since   3.0
 	 */
-	public static function chosen($selector = '.advancedSelect', $debug = null)
+	public static function chosen($selector = '.advancedSelect', $debug = null, $force = false)
 	{
 		if (isset(static::$loaded[__METHOD__][$selector]))
+		{
+			return;
+		}
+
+		static::$loaded[__METHOD__][$selector] = true;
+
+		$template = JFactory::getApplication()->getTemplate(true);
+		// Allow to be disabled by the template parameters
+		if(!$force && !$template->params->get('formbehavior_chosen', 1))
 		{
 			return;
 		}
@@ -69,8 +79,6 @@ abstract class JHtmlFormbehavior
 				});
 			"
 		);
-
-		static::$loaded[__METHOD__][$selector] = true;
 
 		return;
 	}
@@ -112,7 +120,7 @@ abstract class JHtmlFormbehavior
 			JHtml::_('jquery.framework');
 
 			// Requires chosen to work
-			static::chosen($selector, $debug);
+			static::chosen($selector, $debug, true);
 
 			JHtml::_('script', 'jui/ajax-chosen.min.js', false, true, false, false, $debug);
 			JFactory::getDocument()->addScriptDeclaration("
