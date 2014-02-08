@@ -571,8 +571,9 @@ Joomla.addListener = function(event, fn, to) {
 	to = to || window;
 	//add to eventlisteners, but only real events
 	if (event === 'domready') {
-		if(!Joomla.initLoadCalled)
+		if(!Joomla.initLoadCalled){
 			Joomla.DOMContentLoaded(fn);
+		}
 	}
 	else if (to.addEventListener) { // W3C DOM
 		to.addEventListener(event, fn);
@@ -732,17 +733,19 @@ Joomla.fireEvent = function(event, element) {
 	}
 
 	//clean up "jinit" storage
-	if(names[1] === 'jinit')
+	if(names[1] === 'jinit'){
 		delete Joomla.eventsStorage[nameBase].jinit;
+	}
 
 	//clean up "domready" storage
-	if(nameBase === 'domready')
+	if(nameBase === 'domready'){
 		delete Joomla.eventsStorage[nameBase];
+	}
 
 	//marker used for check whether a first "load" was fired
-	if(nameBase === 'load' && !Joomla.initLoadCalled)
+	if(nameBase === 'load' && !Joomla.initLoadCalled){
 		Joomla.initLoadCalled = Joomla.readyCalled = true;
-
+	}
 
 	return Joomla;
 };
