@@ -2,14 +2,12 @@
 /**
  * @package    Joomla.Installation
  *
- * @copyright  Copyright (C) 2005 - 2013 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('JPATH_BASE') or die;
 
-jimport('joomla.filesystem.folder');
-jimport('joomla.filesystem.file');
 JFormHelper::loadFieldClass('radio');
 
 /**
@@ -54,8 +52,10 @@ class JFormFieldSample extends JFormFieldRadio
 		// Get a list of files in the search path with the given filter.
 		$files = JFolder::files(JPATH_INSTALLATION . '/sql/' . $type, '^sample.*\.sql$');
 
-		// Add option to not install sampledata.
-		$options[] = JHtml::_('select.option', '', 'INSTL_SITE_INSTALL_SAMPLE_NONE');
+		// Add option to not install sample data.
+		$options[] = JHtml::_('select.option', '',
+			JHtml::_('tooltip', JText::_('INSTL_SITE_INSTALL_SAMPLE_NONE_DESC'), '', '', JText::_('INSTL_SITE_INSTALL_SAMPLE_NONE'))
+		);
 
 		// Build the options list from the list of files.
 		if (is_array($files))
@@ -88,6 +88,7 @@ class JFormFieldSample extends JFormFieldRadio
 		if (!$this->value)
 		{
 			$conf = JFactory::getConfig();
+
 			if ($conf->get('sampledata'))
 			{
 				$this->value = $conf->get('sampledata');
